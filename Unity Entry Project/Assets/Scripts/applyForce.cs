@@ -5,7 +5,7 @@ using UnityEngine;
 public class applyForce : MonoBehaviour
 {
     public Rigidbody rb;
-    public float forceAmount = 10f;
+    public float forceAmount = 5f;
 
     // Update is called once per frame
     void Update()
