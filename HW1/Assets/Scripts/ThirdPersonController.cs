@@ -1,8 +1,10 @@
 ﻿
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ThirdPersonController : MonoBehaviour
 {
+    public GameObject loseUI;
 
     public float velocity = 5f;
     public float sprintAdittion = 3.5f;
@@ -96,16 +98,35 @@ public class ThirdPersonController : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (!hit.gameObject.CompareTag("Key"))
-            return;
+        if (hit.gameObject.CompareTag("Key"))
+        {
+            Rigidbody body = hit.collider.attachedRigidbody;
 
-        Rigidbody body = hit.collider.attachedRigidbody;
+            if (hit.moveDirection.y < -0.3)
+                return;
 
-        if (hit.moveDirection.y < -0.3)
-            return;
+            Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+            body.velocity = pushDir * 8.0f;
+        }
 
-        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-        body.velocity = pushDir * 8.0f;
+        if (hit.gameObject.CompareTag("Trap"))
+        {
+            GameOver();
+        }
+    }
+
+    void GameOver()
+    {
+        loseUI.SetActive(true);
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 }
