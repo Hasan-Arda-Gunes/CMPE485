@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Key
   - Trap
+  - Spike
   layers:
   - Default
   - TransparentFX

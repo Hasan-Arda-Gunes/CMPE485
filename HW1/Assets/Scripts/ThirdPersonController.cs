@@ -23,6 +23,7 @@ public class ThirdPersonController : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1f;
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
 
@@ -113,6 +114,16 @@ public class ThirdPersonController : MonoBehaviour
         {
             GameOver();
         }
+
+        if (hit.gameObject.CompareTag("Spike"))
+        {
+            SpikeTrapDemo trapScript = hit.gameObject.GetComponent<SpikeTrapDemo>();
+            if (trapScript != null && trapScript.isOpen)
+            {
+                GameOver();
+            }
+        }
+
     }
 
     void GameOver()
