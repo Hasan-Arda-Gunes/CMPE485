@@ -14,13 +14,33 @@ public class SkeletonAI : MonoBehaviour
 
     void Update()
     {
-        if (player != null)
+        if (player != null && agent.isActiveAndEnabled && agent.isOnNavMesh)
         {
-            agent.SetDestination(player.position);
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-            float currentSpeed = agent.velocity.magnitude;
-            animator.SetFloat("Speed", currentSpeed);
+            if (distanceToPlayer <= agent.stoppingDistance)
+            {
+                // 1. Face the player while attacking
+                FaceTarget();
+
+                // 2. Trigger Attack Animation
+                animator.SetTrigger("Attack");
+            }
+            else
+            {
+                // 3. Move toward player
+                agent.SetDestination(player.position);
+            }
+
+            animator.SetFloat("Speed", agent.velocity.magnitude);
         }
+    }
+
+    void FaceTarget()
+    {
+        Vector3 direction = (player.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
     public void OnDeath()
