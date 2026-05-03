@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SwordAttack : MonoBehaviour
+public class PlayerAttack : MonoBehaviour
 {
     public Collider swordCollider;
     public int damage = 10;
@@ -8,61 +8,58 @@ public class SwordAttack : MonoBehaviour
     public int maxAttackNumber = 3;
     public Animator animator;
     private float lastClickTime;
-    public float comboResetTime = 1f;
+    public float comboResetTime = 0.5f;
 
     void Start()
     {
-        swordCollider.enabled = false;
+        if (swordCollider != null) swordCollider.enabled = false;
     }
 
     public void Attack()
     {
-        swordCollider.enabled = true;
-        attackNumber = (attackNumber + 1) % (maxAttackNumber + 1);
-        if (animator != null)
-        {
-            animator.SetInteger("Attack", attackNumber);
-        }
         lastClickTime = Time.time;
+
+        attackNumber++;
+        if (attackNumber > maxAttackNumber) attackNumber = 1;
+
+        TriggerAnimation();
     }
 
     public void SpinAttack()
     {
-        swordCollider.enabled = true;
-        attackNumber = 4;
+        lastClickTime = Time.time;
+        attackNumber = 4; // Specialized ID for Spin
+        TriggerAnimation();
+    }
+
+    private void TriggerAnimation()
+    {
         if (animator != null)
         {
-            animator.SetInteger("Attack", attackNumber);
+            animator.SetInteger("AttackIndex", attackNumber);
+            animator.SetTrigger("DoAttack");
         }
-        lastClickTime = Time.time;
+        swordCollider.enabled = true;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) // Space key
-        {
-            Attack();
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift)) // Left Shift key
-        {
-            SpinAttack();
-        }
+        if (Input.GetKeyDown(KeyCode.Space)) Attack();
+        if (Input.GetKeyDown(KeyCode.LeftShift)) SpinAttack();
 
         if (attackNumber != 0 && Time.time - lastClickTime > comboResetTime)
         {
-            attackNumber = 0;
-            if (animator != null)
-            {
-                animator.SetInteger("Attack", attackNumber);
-            }
-            
-            swordCollider.enabled = false;
+            ResetToIdle();
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    void ResetToIdle()
     {
-    
+        attackNumber = 0;
+        if (animator != null)
+        {
+            animator.SetInteger("AttackIndex", 0);
+        }
+        if (swordCollider != null) swordCollider.enabled = false;
     }
 }

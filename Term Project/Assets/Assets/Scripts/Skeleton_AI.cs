@@ -7,6 +7,9 @@ public class SkeletonAI : MonoBehaviour
     public Animator animator;
     public Transform player;
 
+    private float lastAttackTime;
+    public float attackCooldown = 1.5f;
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -22,13 +25,17 @@ public class SkeletonAI : MonoBehaviour
             {
                 // 1. Face the player while attacking
                 FaceTarget();
+                agent.isStopped = true;
 
-                // 2. Trigger Attack Animation
-                animator.SetTrigger("Attack");
+                if (Time.time - lastAttackTime > attackCooldown)
+                {
+                    animator.SetTrigger("Attack");
+                    lastAttackTime = Time.time;
+                }
             }
             else
             {
-                // 3. Move toward player
+                agent.isStopped = false;
                 agent.SetDestination(player.position);
             }
 
