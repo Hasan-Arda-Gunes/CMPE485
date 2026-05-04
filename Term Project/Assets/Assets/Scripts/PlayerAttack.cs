@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
@@ -9,6 +10,7 @@ public class PlayerAttack : MonoBehaviour
     public Animator animator;
     private float lastClickTime;
     public float comboResetTime = 0.5f;
+    private bool attacking = false;
 
     void Start()
     {
@@ -40,6 +42,7 @@ public class PlayerAttack : MonoBehaviour
             animator.SetTrigger("DoAttack");
         }
         swordCollider.enabled = true;
+        attacking = true;
     }
 
     void Update()
@@ -61,5 +64,19 @@ public class PlayerAttack : MonoBehaviour
             animator.SetInteger("AttackIndex", 0);
         }
         if (swordCollider != null) swordCollider.enabled = false;
+        attacking = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        CharacterStats enemyStats = other.GetComponentInParent<CharacterStats>();
+
+        if (enemyStats != null && other.transform.root.CompareTag("Enemy") && swordCollider.enabled && attacking)
+        {
+            Debug.Log("Confirmed Hit on Root Enemy!");
+            enemyStats.TakeDamage(damage);
+            attacking = false;
+        }
+        
     }
 }
