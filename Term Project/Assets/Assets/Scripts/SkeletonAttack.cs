@@ -38,8 +38,6 @@ public class SkeletonAttack : MonoBehaviour
                 attacking = false;
                 
             }
-            Debug.Log("Skeleton hit: " + other.name);
-
         }
         
     }

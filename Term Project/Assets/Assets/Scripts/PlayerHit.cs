@@ -2,22 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkeletonHitAnimation : MonoBehaviour
+public class PlayerHit : MonoBehaviour
 {
     public Animator animator;
     public CharacterStats stats;
-    public Collider weaponCollider;
 
     void OnEnable()
     {
         stats.OnHit += PlayHurtAnimation;
-        stats.OnDeath += PlayDeathAnimation;
     }
 
     void OnDisable()
     {
         stats.OnHit -= PlayHurtAnimation;
-        stats.OnDeath -= PlayDeathAnimation;
     }
 
     void PlayHurtAnimation()
@@ -25,10 +22,4 @@ public class SkeletonHitAnimation : MonoBehaviour
         animator.SetTrigger("Damage");
     }
 
-    void PlayDeathAnimation()
-    {
-        weaponCollider.enabled = false;
-        animator.SetBool("Dead", true);
-        Destroy(gameObject, 1f); // Adjust the delay as needed
-    }
 }

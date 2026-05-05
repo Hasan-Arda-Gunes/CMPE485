@@ -12,6 +12,10 @@ public class PlayerAttack : MonoBehaviour
     public float comboResetTime = 0.5f;
     private bool attacking = false;
 
+    public bool canSpin = false;
+    public float spinCooldown = 3.0f; // 3 seconds cooldown
+    private float lastSpinTime = -10f;
+
     void Start()
     {
         if (swordCollider != null) swordCollider.enabled = false;
@@ -29,9 +33,14 @@ public class PlayerAttack : MonoBehaviour
 
     public void SpinAttack()
     {
-        lastClickTime = Time.time;
-        attackNumber = 4; // Specialized ID for Spin
-        TriggerAnimation();
+        if (!canSpin) return;
+        if (Time.time - lastSpinTime >= spinCooldown)
+        {
+            lastClickTime = Time.time;
+            lastSpinTime = Time.time; // Update the cooldown timestamp
+            attackNumber = 4; 
+            TriggerAnimation();
+        }
     }
 
     private void TriggerAnimation()
@@ -73,9 +82,8 @@ public class PlayerAttack : MonoBehaviour
 
         if (enemyStats != null && other.transform.root.CompareTag("Enemy") && swordCollider.enabled && attacking)
         {
-            Debug.Log("Confirmed Hit on Root Enemy!");
             enemyStats.TakeDamage(damage);
-            attacking = false;
+            if (attackNumber != 4) attacking = false;
         }
         
     }
