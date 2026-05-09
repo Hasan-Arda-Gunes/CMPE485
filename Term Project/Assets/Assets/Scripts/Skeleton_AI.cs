@@ -19,11 +19,16 @@ public class SkeletonAI : MonoBehaviour
     {
         if (player != null && agent.isActiveAndEnabled && agent.isOnNavMesh)
         {
+            float targetSpeed = DifficultyManager.Instance.currentGlobalSpeed;
+            agent.speed = targetSpeed;
+
+            float speedMultiplier = targetSpeed / DifficultyManager.Instance.initialSpeed;
+            animator.speed = speedMultiplier;
+
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
             if (distanceToPlayer <= agent.stoppingDistance)
             {
-                // 1. Face the player while attacking
                 FaceTarget();
                 agent.isStopped = true;
 
@@ -50,8 +55,4 @@ public class SkeletonAI : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
     }
 
-    public void OnDeath()
-    {
-       
-    }
 }
