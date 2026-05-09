@@ -10,6 +10,7 @@ public class CharacterStats : MonoBehaviour
     public event Action OnHit;
     public event Action<float> OnHealthChanged;
     public event Action OnDeath;
+    public Boolean isDead = false;
 
     void Start()
     {
@@ -23,9 +24,11 @@ public class CharacterStats : MonoBehaviour
 
         // Notify all observers
         OnHealthChanged?.Invoke((float)currentHealth / maxHealth);
-        OnHit?.Invoke();
+        if (currentHealth > 0){
+            OnHit?.Invoke();
+        }
 
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 && !isDead)
         {
             // if this is a skeleton add points to the player score
             if (gameObject.CompareTag("Enemy"))
@@ -34,6 +37,7 @@ public class CharacterStats : MonoBehaviour
             }
             swordCollider.enabled = false;
             OnDeath?.Invoke();
+            isDead = true;
         }
     }
 }

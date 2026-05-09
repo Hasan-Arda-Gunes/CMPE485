@@ -5,6 +5,7 @@ public class SkeletonAttack : MonoBehaviour
     public Collider weaponCollider;
     public int damage = 10;
     private bool attacking = false;
+    public CharacterStats skeletonStats;
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +28,7 @@ public class SkeletonAttack : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // Check if the skeleton hit the Player
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && skeletonStats.currentHealth > 0)
         {
             CharacterStats playerStats = other.GetComponentInParent<CharacterStats>();
             if (playerStats != null && attacking)

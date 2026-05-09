@@ -51,7 +51,7 @@ public class SkillManager : MonoBehaviour
         if (points >= speedUpgradeCost)
         {
             points -= speedUpgradeCost;
-            playerMovement.speed += 1.5f; // Increase movement speed
+            playerMovement.speed += 1f; // Increase movement speed
             speedUpgradeCost = Mathf.RoundToInt(speedUpgradeCost * 2);
             UpdateUI();
         }
