@@ -2178,6 +2178,7 @@ MonoBehaviour:
   animator: {fileID: 9018067477565193944}
   stats: {fileID: 204468076727897101}
   weaponCollider: {fileID: 6446295976612601585}
+  agent: {fileID: 2367678318113649759}
 --- !u!54 &1710194382306841636
 Rigidbody:
   m_ObjectHideFlags: 0

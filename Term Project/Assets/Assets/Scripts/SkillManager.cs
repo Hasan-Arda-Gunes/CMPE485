@@ -17,6 +17,10 @@ public class SkillManager : MonoBehaviour
     public int speedUpgradeCost = 20;
     private bool isSpinUnlocked = false;
 
+    [Header("Health Refill Settings")]
+    public int healthRefillCost = 25;
+    public TextMeshProUGUI healthCostDisplay;
+
     [Header("Cost UI Texts")]
     public TextMeshProUGUI attackCostDisplay;
     public TextMeshProUGUI speedCostDisplay;
@@ -25,7 +29,6 @@ public class SkillManager : MonoBehaviour
     void Start()
     {
         UpdateUI();
-        // Start with spin locked if you want
         if (playerAttack != null) playerAttack.canSpin = false;
     }
 
@@ -40,8 +43,8 @@ public class SkillManager : MonoBehaviour
         if (points >= attackUpgradeCost)
         {
             points -= attackUpgradeCost;
-            playerAttack.damage += 5; // Increase damage
-            attackUpgradeCost = Mathf.RoundToInt(attackUpgradeCost * 1.5f); // Scale cost
+            playerAttack.damage += 5;
+            attackUpgradeCost = Mathf.RoundToInt(attackUpgradeCost * 1.5f);
             UpdateUI();
         }
     }
@@ -68,6 +71,20 @@ public class SkillManager : MonoBehaviour
         }
     }
 
+    public void RefillHealth()
+    {
+        if (points >= healthRefillCost && playerStats.currentHealth < playerStats.maxHealth)
+        {
+            points -= healthRefillCost;
+
+            playerStats.currentHealth = playerStats.maxHealth;
+            playerStats.TakeDamage(0);
+
+            healthRefillCost = Mathf.RoundToInt(healthRefillCost * 2);
+            UpdateUI();
+        }
+    }
+
     void UpdateUI()
     {
         // Update Total Points
@@ -85,6 +102,11 @@ public class SkillManager : MonoBehaviour
         if (spinCostDisplay != null)
         {
             spinCostDisplay.text = isSpinUnlocked ? "UNLOCKED" : "Cost: " + spinUnlockCost;
+        }
+
+        if (healthCostDisplay != null)
+        {
+            healthCostDisplay.text = "Cost: " + healthRefillCost;
         }
     }
 }
